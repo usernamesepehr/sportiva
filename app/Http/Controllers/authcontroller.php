@@ -66,7 +66,7 @@ class authcontroller extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'User registered successfully',
+            'message' => 'اکانت با موفقیت ساخته شد',
             'token' => $token,
             'type' => 'bearer'
         ]);
@@ -124,7 +124,7 @@ class authcontroller extends Controller
           Auth::logout();
           return response()->json([
             'status' => 'succes',
-            'message' => 'succesfully logged out'
+            'message' => 'خروج موفقیت امیز'
           ]);
     }
 }
