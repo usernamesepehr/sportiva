@@ -3,7 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\cart;
+use App\Models\product;
+use App\Models\order;
+use App\Models\like;
+use App\Models\comment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -50,5 +57,25 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+    public function products(): HasMany
+    {
+        return $this->hasMany(product::class);
+    }
+    public function orders(): HasMany
+    {
+        return $this->hasMany(order::class);
+    }
+    public function carts(): HasMany
+    {
+        return $this->hasMany(cart::class);
+    }
+    public function comments(): HasMany
+    {
+        return $this->hasMany(comment::class);
+    }
+    public function like(): HasOne
+    {
+        return $this->hasOne(like::class);
     }
 }
