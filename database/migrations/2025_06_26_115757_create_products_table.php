@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('color');
             $table->text('description');
             $table->boolean('confirmed');
+            $table->integer('quantity');
             $table->timestamps();
         });
     }
