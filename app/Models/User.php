@@ -8,6 +8,8 @@ use App\Models\product;
 use App\Models\order;
 use App\Models\like;
 use App\Models\comment;
+use App\Models\tryproduct;
+use App\Models\trycreator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -77,5 +79,13 @@ class User extends Authenticatable implements JWTSubject
     public function like(): HasOne
     {
         return $this->hasOne(like::class);
+    }
+    public function tryproducts():HasMany
+    {
+        return  $this->hasMany(tryproduct::class);
+    }
+    public function trycreator(): HasOne
+    {
+        return $this->hasOne(trycreator::class);
     }
 }

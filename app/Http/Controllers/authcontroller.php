@@ -18,6 +18,7 @@ class authcontroller extends Controller
             'email' => ['required', 'email', 'unique:users,email'],
             'phone' => ['required', 'min:10', 'max:15'],
             'password' => ['required', 'min:8', 'regex:/^[a-zA-z0-9]+$/'],
+            'address' => ['required', 'string', 'min:5', 'max:255'],
             'role' => ['required', 'integer']
         ],[
             'username.required' => 'وارد کردن نام کاربری الزامی است',
@@ -31,7 +32,9 @@ class authcontroller extends Controller
             'phone.max' => 'شماره تلفن حداکثر 15 کرکتر باشد',
             'password.required' => 'وارد کردن رمز عبور الزامی است',
             'password.min' => 'رمز عبور حداقل باید 8 کرکتر باشد',
-            'password.regex' => 'رمز عبور باید فقط شامل حروف و اعداد انگلیسی باشد'
+            'password.regex' => 'رمز عبور باید فقط شامل حروف و اعداد انگلیسی باشد',
+            'address.required' => 'وارد ککردن ادرس اجباری میباشد',
+            'address.string' => 'ادرس وارد شده باید فقط شامل حروف باشد'
         ]);
 
 
@@ -49,6 +52,7 @@ class authcontroller extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'address' => $request->address,
             'role' => $request->role,
         ]);
 
@@ -66,10 +70,9 @@ class authcontroller extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'اکانت با موفقیت ساخته شد',
             'token' => $token,
             'type' => 'bearer'
-        ]);
+        ], 200);
 
     }
     public function login(Request $request)
@@ -97,7 +100,6 @@ class authcontroller extends Controller
         {
               return response()->json([
                  'status' => false,
-                 'message' => 'اطلاعات نامعتبر است'
               ], 401);
         }
 
@@ -113,18 +115,16 @@ class authcontroller extends Controller
 
         return response()->json([
            'status' => true,
-           'message' => 'ورود موفقیت امیز',
            'token' => $token,
            'type' => 'bearer'
-        ]);
+        ], 200);
     }
 
     public function logout()
     {
           Auth::logout();
           return response()->json([
-            'status' => 'succes',
-            'message' => 'خروج موفقیت امیز'
-          ]);
+            'status' => 'success'
+          ], 200);
     }
 }
