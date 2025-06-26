@@ -7,6 +7,7 @@ use App\Models\order;
 use App\Models\like;
 use App\Models\cart;
 use App\Models\comment;
+use App\Models\category_product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -34,5 +35,9 @@ class product extends Model
     public function likes(): HasMany
     {
         return $this->hasMany(like::class);
+    }
+    public function category_products(): BelongsToMany
+    {
+        return $this->belongsToMany(category_product::class);
     }
 }
