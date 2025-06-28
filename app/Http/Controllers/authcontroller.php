@@ -126,5 +126,6 @@ class authcontroller extends Controller
           return response()->json([
             'status' => 'success'
           ], 200);
+         
     }
 }
