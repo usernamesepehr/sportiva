@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -8,9 +11,52 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use OpenApi\Annotations as OA;
+
+/**
+ * @OA\Info(
+ *     title="Laravel Authentication API",
+ *     version="1.0.0",
+ *     description="مستندات کامل مربوط به ثبت‌نام، ورود و خروج کاربران"
+ * )
+ *
+ * @OA\Server(
+ *     url="http://localhost/api",
+ *     description="سرور لوکال توسعه"
+ * )
+ *
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT"
+ * )
+ */
 
 class authcontroller extends Controller
 {
+
+     /**
+     * @OA\Post(
+     *     path="/register",
+     *     summary="ثبت‌نام کاربر جدید",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"username", "email", "phone", "password", "address", "role"},
+     *             @OA\Property(property="username", type="string", example="mohammad123"),
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="phone", type="string", example="09123456789"),
+     *             @OA\Property(property="password", type="string", format="password", example="abc12345"),
+     *             @OA\Property(property="address", type="string", example="Tehran, Iran"),
+     *             @OA\Property(property="role", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="ثبت‌نام موفق با توکن"),
+     *     @OA\Response(response=422, description="خطای اعتبارسنجی")
+     * )
+     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -75,6 +121,26 @@ class authcontroller extends Controller
         ], 200);
 
     }
+
+
+    /**
+     * @OA\Post(
+     *     path="/login",
+     *     summary="ورود کاربر",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="abc12345")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="ورود موفق با توکن"),
+     *     @OA\Response(response=401, description="اطلاعات اشتباه"),
+     *     @OA\Response(response=422, description="خطای اعتبارسنجی")
+     * )
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -119,6 +185,16 @@ class authcontroller extends Controller
            'type' => 'bearer'
         ], 200);
     }
+
+    /**
+     * @OA\Post(
+     *     path="/logout",
+     *     summary="خروج از حساب",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response=200, description="خروج موفق")
+     * )
+     */
 
     public function logout()
     {

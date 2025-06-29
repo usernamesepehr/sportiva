@@ -20,13 +20,13 @@ class product extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function carts(): BelongsToMany
+    public function carts(): HasMany
     {
-        return $this->belongsToMany(cart::class);
+        return $this->hasMany(cart::class);
     }
-    public function order(): BelongsToMany
+    public function order(): HasMany
     {
-        return $this->belongsToMany(order::class);
+        return $this->hasMany(order::class);
     }
     public function comments(): HasMany
     {
@@ -36,8 +36,8 @@ class product extends Model
     {
         return $this->hasMany(like::class);
     }
-    public function category_products(): BelongsToMany
+    public function category_products(): HasMany
     {
-        return $this->belongsToMany(category_product::class);
+        return $this->hasMany(category_product::class);
     }
 }

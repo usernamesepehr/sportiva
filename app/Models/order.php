@@ -21,8 +21,4 @@ class order extends Model
     {
         return $this->hasOne(product::class);
     }
-    public function cart(): BelongsTo
-    {
-        return $this->belongsTo(cart::class);
-    }
 }

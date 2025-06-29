@@ -12,4 +12,4 @@ Route::controller(authcontroller::class)->group(function() {
     Route::post('/logout', [authcontroller::class, 'logout'])->middleware('auth:api');
 });
 
-Route::post('/product', [productcontroller::class, 'index'])->middleware('role:creator|owner');
+Route::get('/product', [productcontroller::class, 'index']);

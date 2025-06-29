@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\product;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('content');
             $table->foreignIdFor(User::class);
+            $table->foreignIdFor(product::class);
             $table->timestamps();
         });
     }
