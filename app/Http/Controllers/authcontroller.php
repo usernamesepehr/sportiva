@@ -145,7 +145,7 @@ class authcontroller extends Controller
     {
         $validator = Validator::make($request->all(), [
           'email' => ['required', 'email'],
-          'password' => ['required', 'min:8', 'regex:/^[a-zA-z0-9]+$/']
+          'password' => ['required', 'min:8', 'regex:/^[a-zA-Z0-9]+$/']
         ], [
            'email.required' => 'وارد کزدن ایمیل الزامی میباشد',
            'email.email' => 'ایمیل وارد شده نامعتبر است',

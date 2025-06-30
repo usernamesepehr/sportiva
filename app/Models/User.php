@@ -74,8 +74,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(comment::class);
     }
-    public function like(): HasOne
+    public function like(): HasMany
     {
-        return $this->hasOne(like::class);
+        return $this->hasMany(like::class);
     }
 }
