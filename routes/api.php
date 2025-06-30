@@ -4,6 +4,7 @@ use App\Http\Controllers\authcontroller;
 use App\Http\Controllers\commentcontroller;
 use App\Http\Controllers\likecontroller;
 use App\Http\Controllers\productcontroller;
+use App\Http\Controllers\searchcontroller;
 use App\Models\product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,3 +37,5 @@ Route::controller(commentcontroller::class)->group(function() {
         Route::delete('/comments', [commentcontroller::class, 'deleteComment']);
     });
 });
+
+Route::get('/search', searchcontroller::class);
