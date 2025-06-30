@@ -139,6 +139,420 @@
                     }
                 ]
             }
+        },
+        "/comments/{product_id}": {
+            "get": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "دریافت لیست نظرات محصول",
+                "description": "کامنت‌های مربوط به یک محصول خاص را دریافت می‌کند.",
+                "operationId": "2e5babac09339c83a188fba650a88bda",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "description": "شناسه محصول",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 42
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "لیست نظرات",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comments/check-owner": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "بررسی مالکیت کامنت",
+                "description": "تعیین می‌کند که آیا کامنت متعلق به کاربر احراز هویت‌شده است یا نه.",
+                "operationId": "6825a135ffdb13c1fa78d423f67969a4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "کاربر صاحب کامنت است"
+                    },
+                    "403": {
+                        "description": "عدم دسترسی"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/comments": {
+            "put": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "ویرایش نظر",
+                "description": "ویرایش محتوای یک کامنت ثبت‌شده توسط همان کاربر.",
+                "operationId": "c9131325d81b027f31b14a60a0188959",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "content"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "این محصول خوب بود ولی بسته‌بندی ضعیف بود."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "کامنت با موفقیت ویرایش شد"
+                    },
+                    "422": {
+                        "description": "خطای اعتبارسنجی"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "ثبت کامنت جدید",
+                "description": "ارسال نظر جدید برای یک محصول توسط کاربر لاگین‌شده.",
+                "operationId": "4536ee86f2ecb8c27bc0d5bd63e5bc37",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "product_id",
+                                    "content"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "type": "integer",
+                                        "example": 12
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "عالی بود!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "نظر با موفقیت ثبت شد"
+                    },
+                    "422": {
+                        "description": "خطای اعتبارسنجی"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "حذف نظر",
+                "description": "کامنت مشخص‌شده را حذف می‌کند.",
+                "operationId": "da27e4ad5e47446ac4ae0a33fd149c92",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 10
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "کامنت با موفقیت حذف شد"
+                    },
+                    "404": {
+                        "description": "کامنت پیدا نشد"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/likes/{user_id}": {
+            "get": {
+                "tags": [
+                    "Likes"
+                ],
+                "summary": "لیست محصولات لایک شده توسط کاربر",
+                "description": "دریافت محصولاتی که توسط یک کاربر خاص لایک شده‌اند.",
+                "operationId": "0d3b8011d69d8efd7ec8c08787df8431",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "شناسه کاربر",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "لیست محصولات لایک شده",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "products": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "کاربر یافت نشد"
+                    }
+                }
+            }
+        },
+        "/like": {
+            "post": {
+                "tags": [
+                    "Likes"
+                ],
+                "summary": "لایک یا آنلایک کردن یک محصول",
+                "description": "اگر محصول قبلاً لایک شده باشد، آن را آنلایک می‌کند و بالعکس.",
+                "operationId": "d1f726f39a39296a18860ef3c0953bce",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "product_id"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "type": "integer",
+                                        "example": 123
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "لایک با موفقیت انجام شد"
+                    },
+                    "200": {
+                        "description": "لایک قبلی حذف شد (آنلایک)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "نمایش همه محصولات",
+                "description": "دریافت لیست کامل تمام محصولات موجود",
+                "operationId": "a1e116d1cba8376f8b6213b5eb0e27f2",
+                "responses": {
+                    "200": {
+                        "description": "لیست محصولات با موفقیت دریافت شد",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "دریافت اطلاعات محصول به‌همراه لایک، نظر و دسته‌بندی‌ها",
+                "description": "اطلاعات کامل یک محصول خاص به‌همراه لایک‌ها، نظرات و دسته‌بندی‌های مرتبط را باز می‌گرداند.",
+                "operationId": "329522fc6ee4a5bbb06e11c5a9d73997",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "شناسه محصول",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 7
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "اطلاعات کامل محصول",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "product": {
+                                            "type": "object"
+                                        },
+                                        "categorys": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "likes": {
+                                            "type": "integer",
+                                            "example": 12
+                                        },
+                                        "comments": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "محصول یافت نشد"
+                    }
+                }
+            }
+        },
+        "/products/top-sales": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "محصولات پرفروش",
+                "description": "نمایش محصولاتی که بیشترین تعداد سفارش را داشته‌اند",
+                "operationId": "0a02e7870570cfb035fab169f569aea0",
+                "responses": {
+                    "200": {
+                        "description": "محصولات برتر از نظر فروش",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -151,6 +565,18 @@
         }
     },
     "tags": [
+        {
+            "name": "Comments",
+            "description": "مدیریت نظرات کاربران بر روی محصولات"
+        },
+        {
+            "name": "Likes",
+            "description": "مدیریت لایک‌های کاربران روی محصولات"
+        },
+        {
+            "name": "Products",
+            "description": "مدیریت نمایش و داده‌های محصولات"
+        },
         {
             "name": "Authentication",
             "description": "Authentication"
