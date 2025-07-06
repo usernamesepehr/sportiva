@@ -31,7 +31,7 @@ class rolemiddleware
 
         if (!in_array($userRole, explode('|', $role)))
         {
-            return response()->json(403);
+            return response()->json([], 403);
         }
         
         
@@ -39,7 +39,7 @@ class rolemiddleware
         return $next($request);
 
        } catch(\Exception $e){
-           return response()->json(401);
+           return response()->json([], 401);
        }
     }
 }

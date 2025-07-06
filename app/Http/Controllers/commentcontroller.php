@@ -76,9 +76,9 @@ class commentcontroller extends Controller
 
         $comment = comment::find($request->id);
         if ($comment->user_id == $user_id){
-            return response()->json(200);
+            return response()->json([], 200);
         }else{
-            return response()->json(403);
+            return response()->json([], 403);
         }
     }
     /**
@@ -124,7 +124,7 @@ class commentcontroller extends Controller
             'content' => $request->content
         ]);
 
-        return response()->json(201);
+        return response()->json([], 201);
     }
     /**
  * @OA\Delete(
@@ -146,7 +146,7 @@ class commentcontroller extends Controller
     public function deleteComment(Request $request)
     {
         comment::findOrFail($request->id)->delete();
-        return response()->json(200);
+        return response()->json([], 200);
     }
     /**
  * @OA\Put(

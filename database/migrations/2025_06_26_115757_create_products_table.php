@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->integer('price');
             $table->integer('discount');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('photo');
             $table->string('color');
             $table->text('description');
-            $table->boolean('confirmed');
+            $table->boolean('confirmed')->default(false);
             $table->integer('quantity');
             $table->timestamps();
         });

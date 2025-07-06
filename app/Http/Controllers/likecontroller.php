@@ -93,14 +93,14 @@ class likecontroller extends Controller
        if($like){
         $like->delete();
 
-        return response()->json(200);
+        return response()->json([], 200);
        }else{
         like::create([
             'user_id' => $userId,
             'product_id' => $request->product_id
          ]);
 
-        return response()->json(201); 
+        return response()->json([], 201); 
        }
     }
 

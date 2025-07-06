@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class product extends Model
 {
+    // protected $except = [];
     protected $guarded = [];
     public function user(): BelongsTo
     {
