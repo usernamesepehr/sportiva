@@ -12,6 +12,233 @@
         }
     ],
     "paths": {
+        "/api/is_owner": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Check if user is owner",
+                "description": "Returns 200 OK if the user is owner",
+                "operationId": "0d4321150f3dc36930ad56cb27abc938",
+                "responses": {
+                    "200": {
+                        "description": "User is owner"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/is_creator": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Check if user is creator",
+                "description": "Returns 200 OK if the user is creator",
+                "operationId": "9d90cb30ccfee2bdc02890f8f976fb24",
+                "responses": {
+                    "200": {
+                        "description": "User is creator"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/apply": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Submit an application",
+                "description": "Allows a user to submit an application",
+                "operationId": "7e207463016b7ad0823cd67a94e837b6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "company",
+                                    "address",
+                                    "meli"
+                                ],
+                                "properties": {
+                                    "company": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "My Company"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "maxLength": 500,
+                                        "minLength": 10,
+                                        "example": "1234 Some Street, City"
+                                    },
+                                    "meli": {
+                                        "type": "string",
+                                        "pattern": "^\\d{10}$",
+                                        "example": "1234567890"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Application submitted successfully"
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/apply/all": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Get all applications",
+                "description": "Returns list of all apply entries",
+                "operationId": "e0d15fac66c26d04f7e005ef5d4325ee",
+                "responses": {
+                    "200": {
+                        "description": "List of applications",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Apply"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/apply/fail": {
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Delete an application (fail)",
+                "description": "Deletes an application by ID",
+                "operationId": "2afdcc87a99e4cdbc2fdb633172be4ce",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Application deleted successfully"
+                    },
+                    "404": {
+                        "description": "Application not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/apply/verify": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Verify and approve an application",
+                "description": "Updates user role and details from application and deletes the application",
+                "operationId": "d3bf96b24aca570deeccc5703b7505c6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Application verified and user updated"
+                    },
+                    "404": {
+                        "description": "Application or user not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/register": {
             "post": {
                 "tags": [
@@ -138,6 +365,315 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/api/cart/list": {
+            "get": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Get list of carts for authenticated user",
+                "operationId": "ef9359570d93217ee6eede91abf78bdf",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cart/{id}": {
+            "get": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Get specific cart item by ID",
+                "operationId": "25a2bb27f8567fa5a94124c5437673bd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Cart ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cart item found"
+                    },
+                    "404": {
+                        "description": "Cart not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cart/create": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Add new cart item",
+                "operationId": "be7ddcf44ccb3cad2e0aa312755b7f69",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "description": "Product ID",
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "description": "Quantity of product",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cart item created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error or insufficient product quantity"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cart/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Delete a cart item",
+                "operationId": "df7fd8a0574b2bf4acb0846e8496d693",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Cart item ID to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cart item deleted"
+                    },
+                    "404": {
+                        "description": "Cart item not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cart/update": {
+            "put": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Update quantity of a cart item",
+                "operationId": "4d3ca3567cffea16be7f891a9517d8c2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "description": "Cart ID",
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "description": "New quantity",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cart item updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error or insufficient product quantity"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/category/create": {
+            "post": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Create a new category",
+                "operationId": "739888a629e66126c0c2ec05deaa28ee",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "New Category"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Category created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/category/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Delete a category",
+                "operationId": "8212077e1fb714ce0d615bb40629dd2c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category deleted successfully"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/api/category/list": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get list of all categories",
+                "operationId": "74e2c0aa0a2d7b1d5f5c142ff3223b4c",
+                "responses": {
+                    "200": {
+                        "description": "List of categories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "categories": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/comments/{product_id}": {
@@ -436,14 +972,14 @@
                 ]
             }
         },
-        "/products": {
+        "/product": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "نمایش همه محصولات",
                 "description": "دریافت لیست کامل تمام محصولات موجود",
-                "operationId": "a1e116d1cba8376f8b6213b5eb0e27f2",
+                "operationId": "353457de6f553e1ec89c81790ea41b84",
                 "responses": {
                     "200": {
                         "description": "لیست محصولات با موفقیت دریافت شد",
@@ -466,14 +1002,14 @@
                 }
             }
         },
-        "/products/{id}": {
+        "/product/{id}": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "دریافت اطلاعات محصول به‌همراه لایک، نظر و دسته‌بندی‌ها",
                 "description": "اطلاعات کامل یک محصول خاص به‌همراه لایک‌ها، نظرات و دسته‌بندی‌های مرتبط را باز می‌گرداند.",
-                "operationId": "329522fc6ee4a5bbb06e11c5a9d73997",
+                "operationId": "9ace320dd165a7938d14b98f0a211780",
                 "parameters": [
                     {
                         "name": "id",
@@ -524,14 +1060,14 @@
                 }
             }
         },
-        "/products/top-sales": {
+        "/product/top-sales": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "محصولات پرفروش",
                 "description": "نمایش محصولاتی که بیشترین تعداد سفارش را داشته‌اند",
-                "operationId": "0a02e7870570cfb035fab169f569aea0",
+                "operationId": "9aa0c2151e9bfa1455725ab8df355670",
                 "responses": {
                     "200": {
                         "description": "محصولات برتر از نظر فروش",
@@ -553,9 +1089,730 @@
                     }
                 }
             }
+        },
+        "/api/product/create": {
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Create a new product",
+                "description": "Creates a product with image upload and category linking.",
+                "operationId": "8d5b520624b3451fc90179a38880c910",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "price",
+                                    "discount",
+                                    "finaleprice",
+                                    "color",
+                                    "photo",
+                                    "description",
+                                    "quantity",
+                                    "categories"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "price": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "discount": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "finaleprice": {
+                                        "type": "integer",
+                                        "example": 90000
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "photo": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "maxLength": 500
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "categories": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/product/delete": {
+            "delete": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Delete a product",
+                "description": "Deletes a product if authorized.",
+                "operationId": "0f2eb666dc2022c5142c4df42cd1741f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product deleted successfully"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/product-update": {
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update a product",
+                "description": "Updates the product details, including optional photo upload.",
+                "operationId": "907c464aebb01d33f1ea5fdf849592fc",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "price": {
+                                        "type": "integer"
+                                    },
+                                    "discount": {
+                                        "type": "integer"
+                                    },
+                                    "finaleprice": {
+                                        "type": "integer"
+                                    },
+                                    "color": {
+                                        "type": "string"
+                                    },
+                                    "photo": {
+                                        "type": "file",
+                                        "format": "binary"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    },
+                                    "categories": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated successfully"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/confirm-product": {
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Confirm a product",
+                "description": "Admin confirms a product so it becomes visible.",
+                "operationId": "62349f191fe28cf9813bc825cb9bcf46",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product confirmed successfully"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/product/not-confirmed": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get unconfirmed products",
+                "description": "Returns a list of products that are not confirmed.",
+                "operationId": "74b87eeb3a7a774847266cfafc0f84be",
+                "responses": {
+                    "200": {
+                        "description": "Unconfirmed products list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "products": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "price": {
+                                                        "type": "integer"
+                                                    },
+                                                    "discount": {
+                                                        "type": "integer"
+                                                    },
+                                                    "finaleprice": {
+                                                        "type": "integer"
+                                                    },
+                                                    "color": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    },
+                                                    "photo": {
+                                                        "type": "string",
+                                                        "format": "url"
+                                                    },
+                                                    "quantity": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/search": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Search confirmed products by name",
+                "operationId": "6e52d59ad53df59f39121be05eaa85e6",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name of the product to search",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of confirmed products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "products": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "price": {
+                                                        "type": "number"
+                                                    },
+                                                    "discount": {
+                                                        "type": "number"
+                                                    },
+                                                    "finaleprice": {
+                                                        "type": "number"
+                                                    },
+                                                    "color": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    },
+                                                    "photo": {
+                                                        "type": "string",
+                                                        "format": "url"
+                                                    },
+                                                    "quantity": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No confirmed products found"
+                    }
+                }
+            }
+        },
+        "/api/search/not-confirmed": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Search not confirmed products by name",
+                "operationId": "16277bfbddfec47cb5cdb21a30ab0a61",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name of the product to search",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of not confirmed products"
+                    },
+                    "404": {
+                        "description": "No not confirmed products found"
+                    }
+                }
+            }
+        },
+        "/api/search/all": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Search all products by name",
+                "operationId": "edf55028739e27c2d0a5ea5773eececf",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name of the product to search",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all products"
+                    },
+                    "404": {
+                        "description": "No products found"
+                    }
+                }
+            }
+        },
+        "/api/search/users": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Search users by username",
+                "operationId": "3212520b3adc4a74d1fd67192d9ce250",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Username to search",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "email": {
+                                                        "type": "string"
+                                                    },
+                                                    "phone": {
+                                                        "type": "string"
+                                                    },
+                                                    "role": {
+                                                        "type": "string"
+                                                    },
+                                                    "meli": {
+                                                        "type": "string"
+                                                    },
+                                                    "company": {
+                                                        "type": "string"
+                                                    },
+                                                    "company_address": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No users found"
+                    }
+                }
+            }
+        },
+        "/api/search/creators": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Search creators by username",
+                "operationId": "427dc01675c952783e321feb9b243767",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Username of the creator",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of creators",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "creators": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "email": {
+                                                        "type": "string"
+                                                    },
+                                                    "phone": {
+                                                        "type": "string"
+                                                    },
+                                                    "role": {
+                                                        "type": "string"
+                                                    },
+                                                    "meli": {
+                                                        "type": "string"
+                                                    },
+                                                    "company": {
+                                                        "type": "string"
+                                                    },
+                                                    "company_address": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No creators found"
+                    }
+                }
+            }
+        },
+        "/api/user/{id}": {
+            "delete": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "Delete a user by ID",
+                "operationId": "febdb832a72b1a4013f61a59d98ed27d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/user/list": {
+            "get": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "List all users",
+                "operationId": "04a341b44965dcdb9f0dc226b1b8402f",
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "email": {
+                                                        "type": "string"
+                                                    },
+                                                    "phone": {
+                                                        "type": "string"
+                                                    },
+                                                    "role": {
+                                                        "type": "string"
+                                                    },
+                                                    "meli": {
+                                                        "type": "string"
+                                                    },
+                                                    "company": {
+                                                        "type": "string"
+                                                    },
+                                                    "company_address": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No users found"
+                    }
+                }
+            }
         }
     },
     "components": {
+        "schemas": {
+            "Apply": {
+                "required": [
+                    "user_id",
+                    "company",
+                    "address",
+                    "meli"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "company": {
+                        "type": "string",
+                        "example": "My Company"
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "1234 Some Street, City"
+                    },
+                    "meli": {
+                        "type": "string",
+                        "example": "1234567890"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "required": [
+                    "id",
+                    "role"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "role": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "company": {
+                        "type": "string",
+                        "example": "My Company"
+                    },
+                    "company_address": {
+                        "type": "string",
+                        "example": "1234 Some Street, City"
+                    },
+                    "melli": {
+                        "type": "string",
+                        "example": "1234567890"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
@@ -565,6 +1822,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Admin",
+            "description": "Admin related endpoints"
+        },
         {
             "name": "Comments",
             "description": "مدیریت نظرات کاربران بر روی محصولات"
@@ -578,8 +1839,28 @@
             "description": "مدیریت نمایش و داده‌های محصولات"
         },
         {
+            "name": "User Management",
+            "description": "APIs for managing users"
+        },
+        {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Cart",
+            "description": "Cart"
+        },
+        {
+            "name": "Category",
+            "description": "Category"
+        },
+        {
+            "name": "Product",
+            "description": "Product"
+        },
+        {
+            "name": "Search",
+            "description": "Search"
         }
     ]
 }
