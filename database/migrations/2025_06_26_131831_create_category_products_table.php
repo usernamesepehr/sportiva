@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('category_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(product::class);
-            $table->foreignIdFor(category::class);
+            $table->foreignIdFor(product::class)->constrained()->cascadeOnDelete();
+            // $table->unsignedBigInteger('category_id');
+            // $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreignIdFor(category::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

@@ -64,8 +64,7 @@ class authcontroller extends Controller
             'email' => ['required', 'email', 'unique:users,email'],
             'phone' => ['required', 'min:10', 'max:15'],
             'password' => ['required', 'min:8', 'regex:/^[a-zA-z0-9]+$/'],
-            'address' => ['required', 'string', 'min:5', 'max:255'],
-            'role' => ['required', 'integer']
+            'address' => ['required', 'string', 'min:5', 'max:255']
         ],[
             'username.required' => 'وارد کردن نام کاربری الزامی است',
             'username.min' => ' نام کاربری حداقل باید 4 حرف باشد ',
@@ -98,8 +97,7 @@ class authcontroller extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'address' => $request->address,
-            'role' => $request->role,
+            'address' => $request->address
         ]);
 
 

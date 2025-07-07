@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class category extends Model
 {
     protected $guarded = [];
+    protected $table = 'categories';
 
     public function category_products(): HasMany
     {

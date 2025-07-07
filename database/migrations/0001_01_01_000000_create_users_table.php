@@ -19,7 +19,10 @@ return new class extends Migration
             $table->text('address');
             // $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('role');
+            $table->integer('role')->default(1);
+            $table->integer('melli')->nullable();
+            $table->string('company')->nullable();
+            $table->text('company_address')->nullable();
             // $table->rememberToken();
             $table->timestamps();
         });
