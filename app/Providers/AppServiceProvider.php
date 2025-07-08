@@ -42,5 +42,15 @@ class AppServiceProvider extends ServiceProvider
                     ], 429);
                 });
         });
+        RateLimiter::for('cart', function (Request $request) {
+            return Limit::perMinute(20)
+                ->by(strtolower($request->input('email')) ?: $request->ip())
+                ->response(function () {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'درخواست‌های بیش از حد. لطفاً بعداً امتحان کنید'
+                    ], 429);
+                });
+        });
     }
 }

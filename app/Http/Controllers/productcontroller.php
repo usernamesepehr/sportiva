@@ -23,7 +23,7 @@ class productcontroller extends Controller
 
     /**
      * @OA\Get(
-     *     path="/products",
+     *     path="/product",
      *     summary="نمایش همه محصولات",
      *     description="دریافت لیست کامل تمام محصولات موجود",
      *     tags={"Products"},
@@ -62,7 +62,7 @@ class productcontroller extends Controller
 
     /**
      * @OA\Get(
-     *     path="/products/{id}",
+     *     path="/product/{id}",
      *     summary="دریافت اطلاعات محصول به‌همراه لایک، نظر و دسته‌بندی‌ها",
      *     description="اطلاعات کامل یک محصول خاص به‌همراه لایک‌ها، نظرات و دسته‌بندی‌های مرتبط را باز می‌گرداند.",
      *     tags={"Products"},
@@ -122,7 +122,7 @@ class productcontroller extends Controller
 
      /**
      * @OA\Get(
-     *     path="/products/top-sales",
+     *     path="/product/top-sales",
      *     summary="محصولات پرفروش",
      *     description="نمایش محصولاتی که بیشترین تعداد سفارش را داشته‌اند",
      *     tags={"Products"},
@@ -150,7 +150,7 @@ class productcontroller extends Controller
     }
     /*
     @OA\Get(
-        path="/products/popular",
+        path="/product/popular",
         summary="محبوب‌ترین محصولات",
         description="نمایش محصولاتی با بیشترین تعداد لایک",
         tags={"Products"},
@@ -177,6 +177,46 @@ class productcontroller extends Controller
             'data' => $popularProducts
         ], 200);                    
     }
+    /**
+ * @OA\Post(
+ *     path="/api/product/create",
+ *     summary="Create a new product",
+ *     description="Creates a product with image upload and category linking.",
+ *     tags={"Product"},
+ *     security={{"bearerAuth":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"name", "price", "discount", "finaleprice", "color", "photo", "description", "quantity", "categories"},
+ *                 @OA\Property(property="name", type="string", maxLength=255),
+ *                 @OA\Property(property="price", type="integer", example=100000),
+ *                 @OA\Property(property="discount", type="integer", example=10),
+ *                 @OA\Property(property="finaleprice", type="integer", example=90000),
+ *                 @OA\Property(property="color", type="string", maxLength=255),
+ *                 @OA\Property(property="photo", type="file", format="binary"),
+ *                 @OA\Property(property="description", type="string", maxLength=500),
+ *                 @OA\Property(property="quantity", type="integer", example=5),
+ *                 @OA\Property(property="categories", type="array", @OA\Items(type="integer"))
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Product created successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error"
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized"
+ *     )
+ * )
+ */
+
     public function create_product(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -265,6 +305,35 @@ class productcontroller extends Controller
 
         return response()->json([], 201);
     }
+    /**
+ * @OA\Delete(
+ *     path="/api/product/delete",
+ *     summary="Delete a product",
+ *     description="Deletes a product if authorized.",
+ *     tags={"Product"},
+ *     security={{"bearerAuth":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"id"},
+ *             @OA\Property(property="id", type="integer", example=1)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Product deleted successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Forbidden"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Product not found"
+ *     )
+ * )
+ */
+
     public function delete_product(Request $request){
         $payload = JWTAuth::parseToken()->getPayload();
         $user_id = $payload->get('id');
@@ -283,6 +352,46 @@ class productcontroller extends Controller
             }
         }
     }
+    /**
+ * @OA\Post(
+ *     path="/api/product-update",
+ *     summary="Update a product",
+ *     description="Updates the product details, including optional photo upload.",
+ *     tags={"Product"},
+ *     security={{"bearerAuth":{}}},
+ *     @OA\RequestBody(
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"id"},
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="name", type="string", maxLength=255),
+ *                 @OA\Property(property="price", type="integer"),
+ *                 @OA\Property(property="discount", type="integer"),
+ *                 @OA\Property(property="finaleprice", type="integer"),
+ *                 @OA\Property(property="color", type="string"),
+ *                 @OA\Property(property="photo", type="file", format="binary"),
+ *                 @OA\Property(property="description", type="string"),
+ *                 @OA\Property(property="quantity", type="integer"),
+ *                 @OA\Property(property="categories", type="integer")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Product updated successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Forbidden"
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error"
+ *     )
+ * )
+ */
+
     public function update_product(Request $request)
     {
         
@@ -341,12 +450,63 @@ class productcontroller extends Controller
         }
         $product->update($request->except('photo')); 
     }
+    /**
+ * @OA\Post(
+ *     path="/api/confirm-product",
+ *     summary="Confirm a product",
+ *     description="Admin confirms a product so it becomes visible.",
+ *     tags={"Product"},
+ *     security={{"bearerAuth":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"id"},
+ *             @OA\Property(property="id", type="integer", example=1)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Product confirmed successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Product not found"
+ *     )
+ * )
+ */
+
     public function confirm_product(Request $request)
     {
        $product = product::findOrFail($request->id);
        $product->confirmed = true;
        $product->save();
     }
+    /**
+ * @OA\Get(
+ *     path="/api/product/not-confirmed",
+ *     summary="Get unconfirmed products",
+ *     description="Returns a list of products that are not confirmed.",
+ *     tags={"Product"},
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Unconfirmed products list",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="products", type="array", @OA\Items(
+ *                 @OA\Property(property="name", type="string"),
+ *                 @OA\Property(property="price", type="integer"),
+ *                 @OA\Property(property="discount", type="integer"),
+ *                 @OA\Property(property="finaleprice", type="integer"),
+ *                 @OA\Property(property="color", type="string"),
+ *                 @OA\Property(property="description", type="string"),
+ *                 @OA\Property(property="photo", type="string", format="url"),
+ *                 @OA\Property(property="quantity", type="integer")
+ *             ))
+ *         )
+ *     )
+ * )
+ */
+
     public function not_confirmed()
     {
         $products = product::where('confirmed', 0)->get();

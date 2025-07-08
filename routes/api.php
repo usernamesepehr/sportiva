@@ -21,7 +21,7 @@ Route::controller(authcontroller::class)->group(function() {
 });
 
 Route::controller(productcontroller::class)->group(function() {
-    Route::get('/product/not_confirmed', [productcontroller::class, 'not_confirmed'])->middleware('role:owner');
+    Route::get('/product/not-confirmed', [productcontroller::class, 'not_confirmed'])->middleware('role:owner');
     Route::get('/product', [productcontroller::class, 'index']);
     Route::get('/product/{id}', [productcontroller::class, 'getProduct']);
     Route::get('/product/top-sales', [productcontroller::class, 'mostSales']);
@@ -29,7 +29,7 @@ Route::controller(productcontroller::class)->group(function() {
     Route::post('/product/create', [productcontroller::class, 'create_product'])->middleware('role:creator|owner');
     Route::delete('/product/delete', [productcontroller::class, 'delete_product'])->middleware('role:creator|owner');
     Route::post('/product-update', [productcontroller::class, 'update_product'])->middleware('role:owner|creator');
-    Route::post('/confirm_product', [productcontroller::class, 'confirm_product'])->middleware('role:owner');
+    Route::post('/confirm-product', [productcontroller::class, 'confirm_product'])->middleware('role:owner');
 });
 
 Route::controller(likecontroller::class)->group(function() {
@@ -79,9 +79,9 @@ Route::controller(categorycontroller::class)->group(function() {
 });
 
 Route::controller(cartcontroller::class)->group(function() {
-    Route::post('/cart/create', [cartcontroller::class, 'create'])->middleware('auth:api');
-    Route::get('/cart/list', [cartcontroller::class, 'cart_list'])->middleware('auth:api');
-    Route::get('/cart/{id}', [cartcontroller::class, 'get_cart'])->middleware('auth:api');
-    Route::delete('/cart/delete/{id}', [cartcontroller::class, 'delete']);
-    Route::put('/cart/update', [cartcontroller::class, 'update']);
+    Route::post('/cart/create', [cartcontroller::class, 'create'])->middleware('auth:api', 'throttle:cart');
+    Route::get('/cart/list', [cartcontroller::class, 'cart_list'])->middleware('auth:api', 'throttle:cart');
+    Route::get('/cart/{id}', [cartcontroller::class, 'get_cart'])->middleware('auth:api', 'throttle:cart');
+    Route::delete('/cart/delete/{id}', [cartcontroller::class, 'delete'])->middleware('auth:api', 'throttle:cart');
+    Route::put('/cart/update', [cartcontroller::class, 'update'])->middleware('auth:api', 'throttle:cart');
 });
