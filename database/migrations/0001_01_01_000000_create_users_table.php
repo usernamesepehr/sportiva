@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('melli')->nullable();
             $table->string('company')->nullable();
             $table->text('company_address')->nullable();
+            $table->string('profile');
             // $table->rememberToken();
             $table->timestamps();
         });
