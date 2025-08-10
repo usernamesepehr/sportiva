@@ -348,6 +348,50 @@
                 }
             }
         },
+        "/api/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "رفرش کردن توکن JWT",
+                "description": "این متد توکن JWT فعلی را گرفته و یک توکن جدید صادر می‌کند.",
+                "operationId": "refreshToken",
+                "responses": {
+                    "200": {
+                        "description": "توکن جدید با موفقیت صادر شد",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "توکن معتبر نبود یا منقضی شده است"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/logout": {
             "post": {
                 "tags": [
@@ -358,6 +402,117 @@
                 "responses": {
                     "200": {
                         "description": "خروج موفق"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/update": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "ویرایش اطلاعات کاربر",
+                "description": "این متد اطلاعات پروفایل کاربر را ویرایش می‌کند. نیاز به ارسال توکن JWT در هدر Authorization دارد.",
+                "operationId": "b549859eb4624bcaf320691b849ba2ba",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "maxLength": 16,
+                                        "minLength": 4,
+                                        "example": "myusername"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "example@email.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "maxLength": 15,
+                                        "minLength": 10,
+                                        "example": "09123456789"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 8,
+                                        "example": "Password123"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "تهران، خیابان آزادی"
+                                    },
+                                    "profile": {
+                                        "description": "تصویر پروفایل (jpeg, jpg, png, حداکثر 2MB)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "اطلاعات کاربر با موفقیت ویرایش شد",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "اطلاعات با موفقیت بروزرسانی شد"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "خطا در اعتبارسنجی ورودی‌ها",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "username": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "نام کاربری حداقل باید 4 حرف باشد"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "عدم احراز هویت یا توکن نامعتبر"
                     }
                 },
                 "security": [
@@ -1845,6 +2000,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "User",
+            "description": "User"
         },
         {
             "name": "Cart",

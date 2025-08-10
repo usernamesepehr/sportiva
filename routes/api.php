@@ -18,7 +18,10 @@ Route::controller(authcontroller::class)->group(function() {
     Route::post('/register', [authcontroller::class, 'register'])->middleware('throttle:register');
     Route::post('/login', [authcontroller::class, 'login'])->name('login')->middleware('throttle:register');
     Route::post('/logout', [authcontroller::class, 'logout'])->middleware('auth:api');
+    Route::post('/refresh', [authcontroller::class, 'refresh']);
+    Route::post('/user/update', [authcontroller::class, 'edit_info'])->middleware('auth:api');
 });
+
 
 Route::controller(productcontroller::class)->group(function() {
     Route::get('/product/not-confirmed', [productcontroller::class, 'not_confirmed'])->middleware('role:owner');
