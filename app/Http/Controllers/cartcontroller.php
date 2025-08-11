@@ -108,6 +108,12 @@ class cartcontroller extends Controller
                 'message' => 'متاسفانه موجودی محصول کافی نمیباشد'
             ], 422);
         }
+        $cart = cart::where('user_id', $user_id)->where('product_id', $request->id)->first();
+        if ($cart){
+            $cart->quantity += $request->quantity;
+            $cart->save();
+            exit;
+        }
         cart::create([
             'user_id' => $user_id,
             'product_id' => $request->id,
