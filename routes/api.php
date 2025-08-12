@@ -20,6 +20,7 @@ Route::controller(authcontroller::class)->group(function() {
     Route::post('/logout', [authcontroller::class, 'logout'])->middleware('auth:api');
     Route::post('/refresh', [authcontroller::class, 'refresh']);
     Route::post('/user/update', [authcontroller::class, 'edit_info'])->middleware('auth:api');
+    Route::get('/user/get_info', [authcontroller::class, 'get_info'])->middleware('auth:api');
 });
 
 

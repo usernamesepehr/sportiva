@@ -345,7 +345,15 @@ class authcontroller extends Controller
             $user->save();
         }
 
-        $user->update($request->except('profile')); 
-        
+        $user->update($request->except('profile', 'email', 'id', 'role', 'created_at', 'updated_at'));    
+    }
+    
+    public function get_info()
+    {
+        $payload = JWTAuth::parseToken()->getPayload();
+        $user_id = $payload->get('id');
+        $user = User::where('id', $user_id)->first();
+        $userData = collect($user)->except(['id', 'role', 'created_at', 'updated_at']);
+        return response()->json($userData);
     }
 }
