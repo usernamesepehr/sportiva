@@ -49,7 +49,7 @@ class productcontroller extends Controller
                 'finaleprice' => $product->finaleprice,
                 'color' => $product->color,
                 'description' => $product->description,
-                'photo' => asset('storage/'. $product->photo),
+                'photo' => $product->photo,
                 'quantity' => $product->quantity,
         ];
         
@@ -112,11 +112,12 @@ class productcontroller extends Controller
             'finaleprice' => $product->finaleprice,
             'color' => $product->color,
             'description' => $product->description,
-            'photo' => asset('storage/'. $product->photo),
+            'photo' => $product->photo,
             'quantity' => $product->quantity,
             'categorys' => $categorys,
             'likes' => $likes,
-            'comments' => $comments
+            'comments' => $comments,
+            'created_at' => $product->created_at
         ], 200);
     }
 
@@ -279,7 +280,7 @@ class productcontroller extends Controller
             'discount' => $request->discount,
             'finaleprice' => $request->finaleprice,
             'color' => $request->color,
-            'photo' => $photoPath,
+            'photo' => asset('storage/' . $photoPath),
             'description' => $request->description,
             'quantity' => $request->quantity
         ]);
@@ -445,7 +446,7 @@ class productcontroller extends Controller
            $path = '/products'. "/" . $product->photo;
            Storage::disk('public')->delete($path);
            $photoPath = $request->photo->store('products', 'public');
-           $product->photo = $photoPath;
+           $product->photo = asset('storage/' . $photoPath);
            $product->save();
         }
         $product->update($request->except('photo')); 
@@ -520,7 +521,7 @@ class productcontroller extends Controller
                 'finaleprice' => $product->finaleprice,
                 'color' => $product->color,
                 'description' => $product->description,
-                'photo' => asset('storage/'. $product->photo),
+                'photo' => $product->photo,
                 'quantity' => $product->quantity,
         ];
         

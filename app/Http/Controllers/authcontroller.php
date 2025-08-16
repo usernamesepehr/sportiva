@@ -67,7 +67,7 @@ class authcontroller extends Controller
             'phone' => ['required', 'min:10', 'max:15'],
             'password' => ['required', 'min:8', 'regex:/^[a-zA-z0-9]+$/'],
             'address' => ['required', 'string', 'min:5', 'max:255'],
-            'profile' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'profile' => ['sometimes', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
         ],[
             'username.required' => 'وارد کردن نام کاربری الزامی است',
             'username.min' => ' نام کاربری حداقل باید 4 حرف باشد ',
@@ -83,7 +83,6 @@ class authcontroller extends Controller
             'password.regex' => 'رمز عبور باید فقط شامل حروف و اعداد انگلیسی باشد',
             'address.required' => 'وارد ککردن ادرس اجباری میباشد',
             'address.string' => 'ادرس وارد شده باید فقط شامل حروف باشد',
-            'profile.required' => 'لطفاً یک تصویر پروفایل انتخاب کنید.',
             'profile.image' => 'فایل انتخاب‌شده باید یک تصویر باشد.',
             'profile.mimes' => 'فرمت تصویر باید یکی از موارد jpeg، jpg یا png باشد.',
             'profile.max' => 'حجم تصویر نباید بیشتر از ۲ مگابایت باشد.'        
@@ -97,9 +96,12 @@ class authcontroller extends Controller
                 'errors' => $validator->errors(),
             ], 422);
         }
-        
-        $profilePath = $request->profile->store('profiles', 'public');
 
+        $profilePath = null;
+
+        if(isset($request->profile)){
+        $profilePath = $request->profile->store('profiles', 'public');
+        }
         
         $user = User::create([
             'username' => $request->username,
@@ -107,7 +109,7 @@ class authcontroller extends Controller
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'address' => $request->address,
-            'profile' => asset($profilePath)
+            'profile' => $profilePath ? asset('storage/' . $profilePath) : null
         ]);
 
 
@@ -341,7 +343,7 @@ class authcontroller extends Controller
             $path = '/profiles'. "/" . $user->profile;
             Storage::disk('public')->delete($path);
             $profilePath = $request->profile->store('profiles', 'public');
-            $user->profile = $profilePath;
+            $user->profile = asset('storage/' . $profilePath);
             $user->save();
         }
 
