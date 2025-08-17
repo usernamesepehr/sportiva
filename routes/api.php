@@ -37,7 +37,7 @@ Route::controller(productcontroller::class)->group(function() {
 });
 
 Route::controller(likecontroller::class)->group(function() {
-    Route::get('/like/{user_id}', [likecontroller::class, 'userLikes']);
+    Route::get('/likes', [likecontroller::class, 'userLikes'])->middleware('auth:api');
     Route::post('/like', [likecontroller::class, 'like'])->middleware('auth:api');
 });
 

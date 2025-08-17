@@ -90,7 +90,8 @@ class usercontroller extends Controller
                 'role' => $roleMap[$user->role],
                 'meli' => $user->melli,
                 'company' => $user->company,
-                'company_address' => $user->comany_address
+                'company_address' => $user->comany_address,
+                'created_at' => $user->created_at
              ];
 
         return response()->json([

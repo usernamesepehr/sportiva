@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\like;
+use App\Models\product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -48,11 +49,13 @@ class likecontroller extends Controller
      *     )
      * )
      */
-    public function userLikes($user_id)
+    public function userLikes()
     {
-       $user = User::findOrFail($user_id);
-       $products = $user->likes()->with('product')->get()->pluck('product');
-       $products = $products->values();
+      
+       $payload = JWTAuth::parseToken()->getPayload();
+       $user_id = $payload->get('id');
+       $likes = like::where('user_id', $user_id)->pluck('product_id');
+       $products = product::whereIn('id', $likes)->get()->makeHidden(['user_id', 'confirmed', 'created_at', 'updated_at']);
 
        return response()->json([
         'products' => $products
