@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\category;
+use App\Models\category_product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use OpenApi\Annotations as OA;
@@ -102,8 +103,17 @@ class categorycontroller extends Controller
     public function cartegory_list()
     {
         $categories = category::get();
+        $categories->transform(function($category) {
+            $category->count = category_product::where('category_id', $category->id)->count();
+            return  $category;
+        });
         return response()->json([
             'categories' => $categories
         ], 200);
+    }
+    public function get_products($id)
+    {
+        $products = category_product::where('category_id', $id)->with('product')->get();
+        return response()->json(['products' => $products]);
     }
 }

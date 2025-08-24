@@ -80,6 +80,7 @@ Route::controller(categorycontroller::class)->group(function() {
     Route::get('/category/list', [categorycontroller::class, 'cartegory_list'])->middleware('role:owner');
     Route::post('/category/create', [categorycontroller::class, 'create_category'])->middleware('role:owner');
     Route::delete('/category/delete/{id}', [categorycontroller::class, 'delete_category'])->middleware('role:owner');
+    Route::get('/category_product/{id}', [categorycontroller::class, 'get_products']);
 });
 
 Route::controller(cartcontroller::class)->group(function() {
