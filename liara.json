@@ -4,5 +4,8 @@
   "build": {
     "location": "iran"
   },
-  "disks": []
+  "disks": [],
+  "php": {
+    "version": "8.2"
+  }
 }
